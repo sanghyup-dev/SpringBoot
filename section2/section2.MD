@@ -17,3 +17,15 @@
 
 - gameRunner class is disconnected from games
 - it is only connected to the interface
+
+## Wiring Dependencies using SPRING framework
+
+![Spring_dependencies](Spring_dependencies.png)
+
+### Simple example
+
+- Creating a spring context with spring beans
+
+![springbeans](springbeans.png)
+
+9단계 0.23
