@@ -10,3 +10,10 @@
 - Coupling: How much work is involved in changing something
 - You need to change the GameRunner class to change to another game
 - we want loose coupling as much as possible
+
+## Using Interfaces for loose coupling
+
+![interface](interface.png)
+
+- gameRunner class is disconnected from games
+- it is only connected to the interface
