@@ -1,4 +1,4 @@
-# Step 02 - Getting Started with Java Spring Framework
+# Section 2
 
 ## Tightly Coupled Java Code
 
@@ -26,6 +26,40 @@
 
 - Creating a spring context with spring beans
 
+  - Spring beans: things that are managed by Spring
+
 ![springbeans](springbeans.png)
 
-9단계 0.23
+- Configure the things that we want Spring to manage - "@Configuration" annotated class
+  - HelloWorldConfiguration class has "@Bean" annotated methods that produce beans
+  - default name of Bean is the name of the "@Bean"method
+  - add an attribute to annotation for custom name
+    - ```@Bean(name = "customName")```
+
+- Launch a Spring Context
+  - ```var context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class);```
+  
+- Retrieving Beans managed by Spring
+  - ```context.getBean(nameofBean);```
+  - ```context.getBean(typeofBean);```
+    - ex) ```context.getBean(Address.class);```
+  
+## Implementing Auto Wiring in Spring Framework Java Configuration File
+
+- Using existing Beans managed by spring to create a new Bean
+  - Method 1 - Using method calls
+    - use the method of existing beans
+  ```Java
+  @Bean
+  public Person person2MethodCall() {
+    return new Person(name(), age(), address());
+  }
+  ```
+  - Method 2 - Using Parameters
+    - give the type and name of bean as a parameter of the newly created bean
+  ```Java
+  @Bean
+  public Person person3Parameters(String name, int age, Address address3) {
+    return new Person(name, age, address3);
+  }
+  ```
