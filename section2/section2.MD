@@ -63,3 +63,50 @@
     return new Person(name, age, address3);
   }
   ```
+
+## What is Spring Container?
+
+- Spring Container: Manages Spring beans & their lifecycle == Spring context == Spring IOC container
+
+![spring container](spring_container.png)
+
+Types:  
+
+- Bean Factory: Basic Spring Container
+- Application COntext: Advanced Spring Container with enterprise-specific features
+  - Easy to use in web applications
+  - Easy internationalization
+  - Easy integration with Spring AOP
+
+Most enterprise applications use Application Context
+
+- Recommended for web applications, web services - REST API and microservices
+
+## POJO vs Java Bean vs Spring Bean
+
+- POJO: Plain Old Java Object
+  - No constraints
+  - Any java Object
+- Java Bean: Classes adhering to 3 constraints (EJB)
+  - Have public default(no argument) constructor
+  - Allow access to their properties using getter and setter methods
+  - Implement java.io.Serializable
+- Spring Bean: Any Java object that is managed by Spring
+  - Spring uses IOC Container(Bean Factory or Application Context) to manage these objects
+  
+## More about managing beans
+
+listing all beans managed by spring
+
+- context.getBeanDefinitionNames(): returns names of all beans defined in this registry
+- context.getBeanDefinitionCount(): returns number of beans
+
+(the configuration is also managed as a bean)
+
+Primary and Qualifier Annotations
+
+- candidates: when there are multiple beans that can be selected
+- @Primary: add this annotation to a bean to be selected when there are multiple candidates
+- @Qualifier: add this annotation to a bean then use it when auto wireing a bean for this bean to be selected
+
+(Not closing a Spring context may lead to resource leaks -> use try with resources)
