@@ -1,4 +1,4 @@
-package com.in28miniutes.springboot.learn_spring_boot;
+package com.in28minutes.springboot.learn_spring_boot;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +15,8 @@ public class CourseController {
     public List<Course> retrieveAllCourses(){
       return Arrays.asList(
           new Course(1, "Learn AWS", "in28minutes"),
-          new Course(2, "Learn DevOps", "in28minutes")
+          new Course(2, "Learn DevOps", "in28minutes"),
+          new Course(3, "Learn Azure", "in28minutes")
       );
     }
 }
