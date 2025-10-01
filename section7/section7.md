@@ -348,7 +348,53 @@ Validations with Spring Boot
 
 -   **3: Add Validations to Bean**
 
-    -   `Todo.java`
+    -   On Command Bean add validation from `jakarta.validation.constraints` => ex) ` @Size(min=10, message = "Enter at least 10 characters")`
+    -   Add `@valid` to the bean linked in controller => ex) `@Valid Todo todo`
 
 -   **4: Display Validation Errors in the View**
-    -   `todo.jsp`
+    -   Add `BindingResult result` in POST control method to control errors
+    -   jsp: `<form:errors path="description" cssClass="text-warning"/>`
+
+## Working with dates
+
+### Making date format consistant
+
+`application.properties` => `spring.mvc.format.date=yyyy-MM-dd`
+
+### showing date popup field
+
+1. add datepicker to pom.xml
+
+```xml
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap-datepicker</artifactId>
+        <version>1.9.0</version>
+    </dependency>
+```
+
+2. add script and css to jsp
+
+```jsp
+<link href="webjars/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet" >
+
+<script src="webjars/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+```
+
+3. add format script to jsp
+
+```jsp
+<script type="text/javascript">
+	$('#targetDate').datepicker({
+	    format: 'yyyy-mm-dd'
+	});
+    // $('#targetDate') is JQuery code that selects DOM element with id="targetDate
+</script>
+```
+
+## using JSP fragments
+
+1. add `common` directory in directory with all your jsps
+2. add `filename.jspf` for fragments in the `common` directory
+3. add `<%@ include file="common/filenmae.jspf"%>` in the line of the jsp you want your fragement to appear
