@@ -398,3 +398,140 @@ Validations with Spring Boot
 1. add `common` directory in directory with all your jsps
 2. add `filename.jspf` for fragments in the `common` directory
 3. add `<%@ include file="common/filenmae.jspf"%>` in the line of the jsp you want your fragement to appear
+
+## Spring Boot Starter Security
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+login, logout forms are shown for unauthorized requests  
+all urls are protected => username = user, password = in log
+
+package com.at28minutes.springboot.myfirstwebapp.security;
+
+### configuration for Spring Security
+
+```java
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SpringSecurityConfiguration {
+
+}
+```
+
+=> we are using `@Configuration` because we will make beans directly in this file
+
+=> typically use LDAP or Database (using In memory for now)
+
+### Set a global custom encoder
+
+```Java
+  @Bean
+  public PasswordEncoder passwordEncoder(){
+    return new BCryptPasswordEncoder(); //the global encoder bean
+  }
+```
+
+Spring uses it later to check login passwords with `matches(raw, encoded)`
+
+### adding user details
+
+```Java
+  @Bean
+  public InMemoryUserDetailsManager createUserDetailsManager(){
+    Function<String, String> passwordEncoder = input -> passwordEncoder().encode(input);
+    UserDetails userDetails =  User.builder()
+        .passwordEncoder(passwordEncoder)
+        .username("in28minutes")
+        .password("dummy")
+        .roles("USER","ADMIN")
+        .build();
+    return new InMemoryUserDetailsManager(userDetails);
+  }
+```
+
+## Spring Security ID management
+
+```Java
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+```
+
+=> gets data about current logged in user
+
+```Java
+    return authentication.getName();
+```
+
+=> gets the username of the user
+
+## Spring Boot Starter Java JPA & H2 database
+
+### add dependancies
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+### fix database url to constant value
+
+`application.properties` -> add `spring.datasource.url = jdbc:h2:mem:testdb`
+
+### Configure Spring security for H2 console access
+
+SecurityFilterChain : Defines a filter chain matched against every request
+=> overrides default, define entire chain again (need to add default settings too)
+
+=> in `SpringSecurityConfiguration ` class
+
+```Java
+  @Bean
+  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
+    // all urls are protected (default)
+    http.formLogin(withDefaults());//static method import from Customizer
+    // login, logout forms are shown (default)
+    http.csrf(AbstractHttpConfigurer::disable);
+    // disables csrf(Cross-Site request forgery)
+    http.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+    // enables frames
+    return http.build();
+  }
+```
+
+## @Entity
+
+JPA allows us to map a Bean to Database Table  
+=> add @Entity to Bean(must have @Id value -> primary key)
+
+@GeneratedValue -> tells how the primary key (@Id) is created when you persist a new entity.
+
+Springboot auto configuration directly creates tables for all entities whenever it sees a in-memory database
+
+Has alot of flexibility =>` @Entity(name = "Tablename")`, `@Column(name = "Columnname)`, complex many to many mapping etc
+
+camel case is converted to underbars -> (targetDate => TARGET_DATE)
+
+## populating the table
+
+resources -> data.sql  
+=> default : data.sql is executed before the entities are processed(before tables are created)  
+=> `application.properties` -> `spring.jpa.defer-datasource-initialization = true`
+
+```SQL
+INSERT INTO todo (ID, USERNAME, DESCRIPTION, TARGET_DATE, DONE)
+VALUES (10001, 'in28minutes','Get AWS Certified', CURRENT_DATE(),FALSE);
+```
